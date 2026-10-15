@@ -10,8 +10,9 @@ import os
 import shutil
 import subprocess
 import sys
-from datetime import date
+from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parent
 V13 = next((path for path in (ROOT.parent / 'v13', ROOT.parent / '2026-10-15_meeting_v13') if path.exists()), None)
@@ -50,7 +51,7 @@ def get_source(db):
 def manifest_version(snapshot, as_of):
     digest = hashlib.sha256()
     for path in (snapshot / 'dashboard-data.json', snapshot / 'ors-full-catalog.gz.b64',
-                 ROOT / 'model_v15.py', ROOT / 'app.css', ROOT / 'app.js',
+                 ROOT / 'build_v15.py', ROOT / 'model_v15.py', ROOT / 'app.css', ROOT / 'app.js',
                  ROOT / 'statistics.html', ROOT / 'progress.html', ROOT / 'case.html'):
         digest.update(path.name.encode())
         if path.name == 'dashboard-data.json':
@@ -71,7 +72,7 @@ def build(snapshot, output):
     data = json.loads((snapshot / 'dashboard-data.json').read_text(encoding='utf-8'))
     catalog = packed_json(snapshot / 'ors-full-catalog.gz.b64')
     progress = collect(data, catalog)
-    as_of = date.today().isoformat() if data.get('refresh_snapshot') else data['as_of']
+    as_of = datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat() if data.get('refresh_snapshot') else data['as_of']
     freshness = {'analysis_date': as_of,
                  'management_date': data.get('refresh_snapshot', {}).get('management_snapshot_date') or '2026-10-13',
                  'ors_date': data.get('refresh_snapshot', {}).get('latest_ors_date') or
