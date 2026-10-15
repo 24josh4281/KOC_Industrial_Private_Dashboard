@@ -18,6 +18,17 @@ EXPECTED_CHART_COLORS = {
 }
 
 
+def contrast(foreground, background):
+    def luminance(value):
+        channels = [int(value[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+        linear = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+                  for c in channels]
+        return sum(a * b for a, b in zip(linear, (0.2126, 0.7152, 0.0722)))
+
+    a, b = sorted((luminance(foreground), luminance(background)), reverse=True)
+    return (a + 0.05) / (b + 0.05)
+
+
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -58,12 +69,18 @@ def verify(site: Path):
     for token in ('#0B1739', '#2F62F0', '#7B9BF7', '#EEF2FF', '#E2E8F0'):
         if token not in css:
             raise AssertionError(f'이너젠 디자인 색 누락: {token}')
+    brand = json.loads((Path(__file__).with_name('brand.json')).read_text(encoding='utf-8'))
+    for role in ('navy', 'blue', 'dark_blue', 'ink', 'muted'):
+        if contrast(brand[role], '#FFFFFF') < 4.5:
+            raise AssertionError(f'흰 바탕 텍스트 대비 부족: {role}')
     for name in ('statistics.html', 'progress.html', 'work.html', 'case.html'):
         html = (new / name).read_text(encoding='utf-8')
         if ('href="brand.css"' not in html or
                 '외부사업_통합관리_v16.xlsx' in html or
                 '외부사업_통합관리_v15.xlsx' in html):
             raise AssertionError(f'웹 스타일 또는 Excel 연결 누락: {name}')
+        if name != 'case.html' and '<span class="stamp-label">자동 갱신 ·</span>' not in html:
+            raise AssertionError(f'갱신 기준일 표기 누락: {name}')
 
     a = load_workbook(old / '외부사업_통합관리_v16.xlsx')
     b = load_workbook(new / '외부사업_통합관리_v17.xlsx')

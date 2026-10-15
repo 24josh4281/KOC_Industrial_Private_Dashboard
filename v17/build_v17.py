@@ -180,6 +180,8 @@ def build(v16: Path, output: Path):
         if name.endswith('.html'):
             content = content.replace('<link rel="stylesheet" href="app.css">',
                                       '<link rel="stylesheet" href="app.css"><link rel="stylesheet" href="brand.css">')
+            content = content.replace('자동 갱신 · <span class="asof">',
+                                      '<span class="stamp-label">자동 갱신 ·</span><span class="asof">')
         (output / name).write_text(content, encoding='utf-8')
     if (ROOT / 'brand.css').resolve() != (output / 'brand.css').resolve():
         shutil.copy2(ROOT / 'brand.css', output / 'brand.css')
