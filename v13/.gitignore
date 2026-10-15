@@ -1,0 +1,9 @@
+state/
+backups/
+imports/
+snapshots/
+work/
+incoming/*/
+*.inspect.ndjson
+__pycache__/
+*.pyc
