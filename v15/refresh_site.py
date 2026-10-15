@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -14,7 +15,8 @@ V13, V14, V15 = (ROOT / name for name in ('v13', 'v14', 'v15'))
 
 def run(*args):
     result = subprocess.run([sys.executable, *map(str, args)],
-                            capture_output=True, text=True, encoding='utf-8')
+                            capture_output=True, text=True, encoding='utf-8', errors='replace',
+                            env={**os.environ, 'PYTHONIOENCODING': 'utf-8'})
     if result.returncode:
         raise RuntimeError(f"{' '.join(map(str, args))}: {result.stderr.strip()}")
     return json.loads(result.stdout.strip().splitlines()[-1])
@@ -29,6 +31,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--site', required=True, type=Path)
     parser.add_argument('--work', required=True, type=Path)
+    parser.add_argument('--workflow-file', type=Path,
+                        help='담당자 입력 파일 시험용 경로; 미지정 시 incoming/workflow/current.xlsx')
     args = parser.parse_args()
     site, work = args.site.resolve(), args.work.resolve()
     if site == work or site == ROOT or work == ROOT:
@@ -50,6 +54,13 @@ def main():
         committed = run(V13 / 'monthly_ors.py', source, '--commit', '--db', db)
         accepted.append({'file': str(source.relative_to(ROOT)), 'result': 'registered',
                          'rows': committed['rows']})
+    workflow_file = args.workflow_file or ROOT / 'incoming' / 'workflow' / 'current.xlsx'
+    workflow_result = None
+    if workflow_file.exists():
+        preview = run(V13 / 'import_workflow.py', workflow_file, '--db', db)
+        if preview['rows'] != 53:
+            raise SystemExit('담당자 입력 Excel은 2026 관리 Tool 53행 전체가 필요합니다. 기존 공개 판본을 유지합니다.')
+        workflow_result = run(V13 / 'import_workflow.py', workflow_file, '--commit', '--db', db)
     workbook = run(V14 / 'build_v14.py', '--db', db)
     output14 = Path(workbook['output'])
     target14 = site / 'v14'
@@ -67,7 +78,9 @@ def main():
     built = run(V15 / 'build_v15.py', '--db', db, '--output', site / 'v15')
     shutil.copy2(output14 / '외부사업_통합관리_v14.xlsx',
                  site / 'v15' / '외부사업_통합관리_v15.xlsx')
-    shutil.copy2(V15 / 'index.html', site / 'index.html')
+    built16 = run(ROOT / 'v16' / 'build_v16.py', '--v15', site / 'v15',
+                  '--db', db, '--output', site / 'v16')
+    shutil.copy2(ROOT / 'index.html', site / 'index.html')
     (site / '.nojekyll').touch()
     manifest = json.loads((site / 'v15' / 'manifest.json').read_text(encoding='utf-8'))
     progress = json.loads((site / 'v15' / 'data' / 'progress.json').read_text(encoding='utf-8'))
@@ -78,7 +91,8 @@ def main():
         raise SystemExit('ORS 원본행 수가 상세 판본과 일치하지 않습니다. 배포하지 않습니다.')
     if not (site / 'v15' / 'case.html').exists():
         raise SystemExit('상세 페이지가 빠졌습니다. 배포하지 않습니다.')
-    print(json.dumps({'site': str(site), 'zip_imports': accepted,
+    print(json.dumps({'site': str(site), 'zip_imports': accepted, 'v16': built16,
+                      'workflow_import': workflow_result,
                       'manifest': manifest, 'build': built,
                       'workbook_sheets': workbook['excel']['sheets']}, ensure_ascii=False))
 
