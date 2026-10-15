@@ -1,0 +1,18 @@
+{
+  "profile": "innergen_blue",
+  "basis": "B:/CODEX/KOC_Industrial/public-release/design.json v2.3.0 and design.md v2.4",
+  "navy": "#0B1739",
+  "blue": "#2F62F0",
+  "secondary": "#7B9BF7",
+  "dark_blue": "#244FC0",
+  "panel": "#EEF2FF",
+  "canvas": "#F6F8FC",
+  "governing_fill": "#F3F6FF",
+  "governing_line": "#DFE7FF",
+  "border": "#E2E8F0",
+  "ink": "#475569",
+  "muted": "#64748B",
+  "status_warning": "#805400",
+  "status_danger": "#A21A24",
+  "radius_px": 0
+}

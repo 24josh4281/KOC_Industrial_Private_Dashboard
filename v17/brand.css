@@ -1,0 +1,90 @@
+/* Innergen blue, adapted from the project's existing design.json v2.3.0. */
+:root {
+  --navy:#0B1739;
+  --navy2:#172A52;
+  --ink:#475569;
+  --muted:#64748B;
+  --line:#E2E8F0;
+  --bg:#F6F8FC;
+  --paper:#FFFFFF;
+  --teal:#2F62F0;
+  --teal2:#7B9BF7;
+  --blue:#244FC0;
+  --amber:#805400;
+  --red:#A21A24;
+  --green:#24634F;
+  --shadow:none;
+}
+body {font-size:16px;line-height:1.65;font-family:'IBM Plex Sans KR','Pretendard','Malgun Gothic',sans-serif;border-top:3px solid #2F62F0;font-variant-numeric:tabular-nums}
+h1,h2,h3 {color:var(--navy);letter-spacing:-.035em}
+h1 {font-size:clamp(27px,2.45vw,36px)}
+.sidebar {background:var(--navy);border-right:1px solid #21325C}
+.brand {border-color:#344365}
+.brand .mark {background:#2F62F0;border-radius:0;width:38px;height:38px;font-size:19px}
+.brand small,.sidebar-foot {color:#AFC0EC}
+.nav a {border-radius:0;color:#DBE4F7;min-height:44px}
+.nav a:hover,.nav a.active {background:#1B3269}
+.nav a.active:before {background:#7B9BF7;border-radius:0}
+.sidebar-foot {border-color:#344365}
+.eyebrow {color:#244FC0}
+.stamp,.stamp.warn {border-radius:0}
+.stamp {background:#EEF2FF;border-color:#DFE7FF;color:#244FC0}
+.stamp:before {background:#2F62F0}
+.banner {border-radius:0;background:#0B1739;border-top:3px solid #2F62F0;box-shadow:none}
+.banner p {color:#D2DCFA}
+.banner .button {color:#0B1739}
+.button {background:#244FC0;border-radius:0;min-height:44px}
+.button:hover {background:#173B9B;filter:none}
+.button.ghost {border-color:#CBD5E1;color:#244FC0}
+.button.ghost:hover {background:#EEF2FF}
+.kpi {border-radius:0;border-top:3px solid #2F62F0;box-shadow:none}
+.kpi strong {color:#0B1739}
+.kpi.accent {background:#0B1739;border-color:#0B1739;border-top-color:#2F62F0}
+.kpi.accent strong {color:white}
+.kpi.accent .label,.kpi.accent small {color:#D2DCFA}
+.section-title {border-bottom:1px solid #E2E8F0;padding-bottom:9px}
+.section-title h2,.panel h2 {color:#0B1739}
+.panel {border-radius:0;border-top:2px solid #0B1739;box-shadow:none;padding:22px 24px}
+.panel-head p {color:#64748B}
+.panel-head a,.linkback {color:#244FC0}
+.barrow {gap:11px}
+.barrow .track {background:#EEF2FF;border-radius:0;height:10px}
+.barrow .fill,.month i,.legend i {background:#2F62F0;border-radius:0}
+.barrow .fill.blue,.month i.blue,.legend i.blue {background:#0B1739}
+.barrow .fill.amber {background:#A47718}
+.filters {border-radius:0;border-top:2px solid #0B1739}
+.filters label {color:#334155;font-size:12px}
+.filters input,.filters select {background:white;border-color:#CBD5E1;border-radius:0;min-height:44px}
+.filters input:focus,.filters select:focus {border-color:#2F62F0;box-shadow:0 0 0 3px #2F62F030}
+.tablewrap {border-radius:0}
+table {font-size:14px}
+th {background:#0B1739;color:#FFFFFF;border-bottom:0;font-size:12px;font-weight:700}
+td {border-bottom-color:#E2E8F0}
+tbody tr:nth-child(even) {background:#F8FAFD}
+tbody tr:hover {background:#EEF2FF}
+.rowtitle a:hover {color:#244FC0}
+.pill {border-radius:0}
+.pill.teal,.pill.blue,.priority-normal {background:#EEF2FF;color:#244FC0}
+.pill.amber,.priority-high {background:#FFF4DD;color:#805400}
+.pill.red,.priority-age {background:#FCEBEC;color:#A21A24}
+.pill.green {background:#E8F4EF;color:#24634F}
+.queue-item {border-radius:0}
+.queue-item:hover {border-color:#7B9BF7;background:#F3F6FF}
+.detail-hero {border-radius:0;border-top:3px solid #2F62F0}
+.fact {border-radius:0;background:#F3F6FF;border-color:#DFE7FF}
+.timeline {border-left-color:#B8C9F6}
+.event:before {background:#2F62F0;box-shadow:0 0 0 2px #B8C9F6}
+.callout,.notice {border-radius:0;background:#F3F6FF;border-color:#DFE7FF}
+.callout {border-left-color:#2F62F0}
+.callout.amber {background:#FFF8EC;border-left-color:#A47718}
+.callout.red {background:#FDF0F1;border-left-color:#A21A24}
+.pager button {border-radius:0;min-height:38px}
+.toast {border-radius:0;background:#0B1739}
+.toast button {border-radius:0;background:#7B9BF7}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,tr[data-href]:focus-visible {outline:3px solid #2F62F0;outline-offset:2px}
+@media(max-width:760px) {
+  .nav a {min-height:40px}
+  .panel {padding:18px}
+  .kpi {padding:15px}
+  table {font-size:14px}
+}

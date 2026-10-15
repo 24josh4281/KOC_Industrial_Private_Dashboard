@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'">
+  <title>담당자 작업현황 | 산업부문 외부사업</title>
+  <link rel="stylesheet" href="app.css"><link rel="stylesheet" href="brand.css"><script src="app.js" defer></script>
+</head>
+<body data-page="work">
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark">K</span><strong>산업부문 외부사업</strong><small>MANAGEMENT INTELLIGENCE</small></div>
+    <nav class="nav"><a href="statistics.html">▦ &nbsp;통계 분석</a><a href="progress.html">◉ &nbsp;진행현황</a><a class="active" href="work.html">☷ &nbsp;담당자 작업현황</a><a href="외부사업_통합관리_v17.xlsx">▤ &nbsp;Excel 작업본</a></nav>
+    <div class="sidebar-foot">ORS·관리 Tool 출처 분리<br><span class="asof"></span> 기준</div>
+  </aside>
+  <main class="main">
+    <div class="topline"><div><div class="eyebrow">03 / Operator work status</div><h1>지금 확인할 일과 다음 단계</h1><p class="subtitle">2026년 관리 Tool 53행과 ORS 최신 산업부문 처리 이력을 각각 살핍니다. 담당자 입력과 자동 확인 제안을 구분하고, 특이사항·보완차수·기관 근거를 원본 상세에 연결합니다.</p></div><div class="stamp">자동 갱신 · <span class="asof"></span></div></div>
+    <div class="banner"><div><b>업무 지시가 아닌 확인 대기열</b><p>“원본 기반 내부 제안”은 담당자가 확정한 조치가 아닙니다. 30일 표시는 내부 점검이며 법정·계약 기한 초과가 아닙니다.</p></div><a class="button" href="#work-queue">건별 목록 ↓</a></div>
+    <div id="work-kpis" class="kpis"></div>
+    <div class="section-title"><h2>업무 분포와 입력 상태</h2><p>데이터가 없는 칸을 완료로 해석하지 않습니다.</p></div>
+    <div class="grid"><section class="panel"><div class="panel-head"><div><h2>현재 단계</h2><p>출처별 원본행 기준</p></div></div><div id="work-stage-bars" class="bars"></div></section><section class="panel"><div class="panel-head"><div><h2>확인 우선순위</h2><p>원본 이슈·마지막 이력일 기준 내부 분류</p></div></div><div id="work-priority-bars" class="bars"></div></section></div>
+    <section class="panel"><div class="panel-head"><div><h2>관리 Tool 검토기관별 업무행</h2><p>원본에 적힌 검토기관만 집계합니다. ORS 관장기관과 합치지 않으며 컨소시엄 3개 기관의 최신 진행표가 수령되기 전에는 기관별 실적을 확정하지 않습니다.</p></div></div><div id="work-reviewer-bars" class="bars"></div></section>
+    <div class="section-title"><h2>담당자 입력 갱신</h2><p>원본 상태와 실무 의견을 분리해 보존합니다.</p></div>
+    <section class="panel work-guide"><div><h2>Excel에서 의견·안내·다음 조치 입력</h2><p>최신 Excel의 <b>2026 접수·검토·안내</b> 시트에 입력한 뒤 <b>incoming/workflow/current.xlsx</b>로 올려 커밋하세요. 53개 연결키 검증 후 공개 화면과 Excel이 함께 갱신됩니다.</p></div><div class="guide-actions"><a class="button" href="외부사업_통합관리_v17.xlsx">Excel 내려받기</a><a class="button ghost" href="https://github.com/24josh4281/KOC_Industrial_Private_Dashboard/tree/main/incoming/workflow">입력 파일 올리기 ↗</a></div></section>
+    <div class="section-title" id="work-queue"><h2>건별 작업현황</h2><p>행을 누르면 신청 내용, 원본 이력, 검토 의견과 안내 기록을 볼 수 있습니다.</p></div>
+    <div class="filters"><label>출처<select id="work-source"><option value="all">전체 · 중복 가능</option><option value="관리 Tool">관리 Tool 2026</option><option value="ORS">ORS 2026 활동</option></select></label><label>우선순위<select id="work-priority"><option value="all">모든 우선순위</option></select></label><label>단계<select id="work-stage"><option value="all">모든 단계</option></select></label><label>담당<select id="work-owner"><option value="all">전체</option><option value="missing">미배정/미기록</option><option value="assigned">담당 입력/원본 있음</option></select></label><label class="search">검색<input id="work-search" placeholder="사업명·담당자·조치·특이사항"></label><span id="work-count" class="filter-note"></span><button id="work-export" class="button small ghost">조회 CSV</button></div>
+    <section class="panel"><div class="tablewrap"><table><thead><tr><th>우선순위</th><th>사업·단계</th><th>최근 이력 / 경과</th><th>담당자·기관</th><th>다음 조치 / 근거</th><th>특이사항·보완</th><th>상세</th></tr></thead><tbody id="work-table"></tbody></table></div><div class="pager"><button id="work-prev">이전</button><span id="work-pages"></span><button id="work-next">다음</button></div><p class="metric-note">업무 대기열 222행은 관리 Tool 53행과 ORS 169행의 출처별 행을 이어서 보여줍니다. 같은 신청의 중복 여부는 아직 확정되지 않았습니다.</p></section>
+  </main>
+</div><div id="update-toast" class="toast"></div>
+</body>
+</html>

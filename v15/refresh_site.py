@@ -80,6 +80,8 @@ def main():
                  site / 'v15' / '외부사업_통합관리_v15.xlsx')
     built16 = run(ROOT / 'v16' / 'build_v16.py', '--v15', site / 'v15',
                   '--db', db, '--output', site / 'v16')
+    built17 = run(ROOT / 'v17' / 'build_v17.py', '--v16', site / 'v16',
+                  '--output', site / 'v17')
     shutil.copy2(ROOT / 'index.html', site / 'index.html')
     (site / '.nojekyll').touch()
     manifest = json.loads((site / 'v15' / 'manifest.json').read_text(encoding='utf-8'))
@@ -92,6 +94,7 @@ def main():
     if not (site / 'v15' / 'case.html').exists():
         raise SystemExit('상세 페이지가 빠졌습니다. 배포하지 않습니다.')
     print(json.dumps({'site': str(site), 'zip_imports': accepted, 'v16': built16,
+                      'v17': built17,
                       'workflow_import': workflow_result,
                       'manifest': manifest, 'build': built,
                       'workbook_sheets': workbook['excel']['sheets']}, ensure_ascii=False))

@@ -11,6 +11,7 @@ on:
       - 'v13/incoming/**/*.zip'
       - 'v15/**'
       - 'v16/**'
+      - 'v17/**'
       - '.github/workflows/refresh-dashboard.yml'
   workflow_dispatch:
 
@@ -38,10 +39,13 @@ jobs:
         run: python v15/verify_v15.py --site "$RUNNER_TEMP/site"
       - name: Verify operator work status and Excel preservation
         run: python v16/verify_v16.py --site "$RUNNER_TEMP/site"
+      - name: Verify Innergen blue design and all workbook data
+        run: python v17/verify_v17.py --site "$RUNNER_TEMP/site"
       - name: Save generated deliverables in Git
         run: |
           mkdir -p v15/data v15/details
           mkdir -p v16/data v16/details
+          mkdir -p v17/data v17/details
           cp -a "$RUNNER_TEMP/site/v15/data/." v15/data/
           cp -a "$RUNNER_TEMP/site/v15/details/." v15/details/
           cp "$RUNNER_TEMP/site/v15/manifest.json" v15/manifest.json
@@ -50,9 +54,13 @@ jobs:
           cp -a "$RUNNER_TEMP/site/v16/details/." v16/details/
           cp "$RUNNER_TEMP/site/v16/manifest.json" v16/manifest.json
           cp "$RUNNER_TEMP/site/v16/외부사업_통합관리_v16.xlsx" v16/외부사업_통합관리_v16.xlsx
+          cp -a "$RUNNER_TEMP/site/v17/data/." v17/data/
+          cp -a "$RUNNER_TEMP/site/v17/details/." v17/details/
+          cp "$RUNNER_TEMP/site/v17/manifest.json" v17/manifest.json
+          cp "$RUNNER_TEMP/site/v17/외부사업_통합관리_v17.xlsx" v17/외부사업_통합관리_v17.xlsx
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add v15/data v15/details v15/manifest.json v15/외부사업_통합관리_v15.xlsx v16/data v16/details v16/manifest.json v16/외부사업_통합관리_v16.xlsx
+          git add v15/data v15/details v15/manifest.json v15/외부사업_통합관리_v15.xlsx v16/data v16/details v16/manifest.json v16/외부사업_통합관리_v16.xlsx v17/data v17/details v17/manifest.json v17/외부사업_통합관리_v17.xlsx
           if ! git diff --cached --quiet; then
             git commit -m "Refresh ORS data, dashboard and Excel"
             git push
