@@ -46,10 +46,7 @@ def main():
         excel=dest/'외부사업_통합관리_전체자료.xlsx'
         if args.skip_excel or excel.exists():
             print(json.dumps({'unchanged':True,'snapshot':str(dest),'excel_exists':excel.exists()},ensure_ascii=False));return
-        node=Path('C:/Users/24jos/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe')
-        builder=Path('B:/CODEX/KOC_Industrial/outputs/2026-10-15_meeting_v9/work/build_excel_v13.mjs')
-        if not node.exists() or not builder.exists():raise RuntimeError('Excel 생성용 Codex 런타임/빌더가 없습니다. 웹 스냅샷은 유지합니다.')
-        subprocess.run([str(node),'--max-old-space-size=12288',str(builder),f'--root={ROOT}',f'--base-workbook={ROOT/"tools/base_v12.xlsx"}',f'--data={dest/"dashboard-data.json"}',f'--ors={dest/"ors-full-catalog.gz.b64"}',f'--output={excel}'],check=True)
+        subprocess.run([sys.executable,str(ROOT/'tools/refresh_excel.py'),f'--data={dest/"dashboard-data.json"}',f'--ors={dest/"ors-full-catalog.gz.b64"}',f'--output={excel}'],check=True)
         verification=dest/'verification.json'
         current=json.loads(verification.read_text(encoding='utf-8')) if verification.exists() else {}
         current['excel_built']=True;saved(verification,current)
@@ -65,6 +62,15 @@ def main():
         dt=dated_filename(name)
         occurrences.append({'zip':zipname,'file':name,'sha256':sha,'sheet':sheet,'date':dt,'kind':kind,'scope':scope,'columns':json.loads(header),'rows':con.execute('SELECT COUNT(*) FROM ors_rows WHERE member_sha=? AND sheet=?',(sha,sheet)).fetchone()[0]})
         full.append({'container':zipname,'filename':name,'sha256':sha,'sheet':sheet,'nrows':nrows,'ncols':ncols,'cells':cells,'errors':errors,'rows':json.loads(gzip.decompress(blob))})
+    # The checked v13 workbook fixed ORS01~20 in the original ZIP order. Keep
+    # those sheet identities stable; append each subsequent monthly occurrence.
+    baseline=json.loads(gzip.decompress(base64.b64decode((ROOT/'ors-full-catalog.gz.b64').read_text(encoding='ascii'))))
+    rank={(x['container'],x['filename'],x['sha256'],x['sheet']):i for i,x in enumerate(baseline)}
+    paired=list(zip(occurrences,full))
+    paired.sort(key=lambda pair:(rank.get((pair[1]['container'],pair[1]['filename'],pair[1]['sha256'],pair[1]['sheet']),len(rank)),pair[0]['date'],pair[0]['file']))
+    occurrences=[pair[0] for pair in paired];full=[pair[1] for pair in paired]
+    if any((full[i]['container'],full[i]['filename'],full[i]['sha256'],full[i]['sheet'])!=(x['container'],x['filename'],x['sha256'],x['sheet']) for i,x in enumerate(baseline)):
+        raise RuntimeError('검증된 기준 ORS 20개 원본이 DB에서 누락되거나 교체되었습니다.')
     data['ors_imports']=[{k:v for k,v in x.items() if k!='columns'} for x in occurrences]
     data['ors_2026_activity']=activity_for(occurrences,con)
     data['source_coverage'].update({'ors_full_occurrences':len(full),'ors_full_source_cells':sum(x['cells'] for x in full),'ors_unique_rows':con.execute('SELECT COUNT(*) FROM ors_rows').fetchone()[0],'ors_occurrences':len(occurrences),'ors_2026_activity_rows':len(data['ors_2026_activity']),'workflow_notes_entered':len(notes)})
@@ -80,10 +86,7 @@ def main():
     html.write_text(page,encoding='utf-8')
     excel_ok=False
     if not args.skip_excel:
-        node=Path('C:/Users/24jos/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe')
-        builder=Path('B:/CODEX/KOC_Industrial/outputs/2026-10-15_meeting_v9/work/build_excel_v13.mjs')
-        if not node.exists() or not builder.exists():raise RuntimeError('Excel 생성용 Codex 런타임/빌더가 없습니다. 웹 스냅샷은 생성했습니다.')
-        subprocess.run([str(node),'--max-old-space-size=12288',str(builder),f'--root={ROOT}',f'--base-workbook={ROOT/"tools/base_v12.xlsx"}',f'--data={jsonpath}',f'--ors={orspath}',f'--output={excel}'],check=True)
+        subprocess.run([sys.executable,str(ROOT/'tools/refresh_excel.py'),f'--data={jsonpath}',f'--ors={orspath}',f'--output={excel}'],check=True)
         excel_ok=True
     result={'snapshot':str(dest),'latest_ors_date':data['refresh_snapshot']['latest_ors_date'],'ors_occurrences':len(full),'workflow_notes':len(notes),'excel_built':excel_ok,'db_integrity':integrity,'foreign_key_errors':len(fk)}
     saved(dest/'verification.json',result)
