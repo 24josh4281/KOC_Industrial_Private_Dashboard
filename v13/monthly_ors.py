@@ -113,7 +113,7 @@ def main():
             con.rollback()
             raise
     con.close()
-    if not report_path.exists(): report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
+    report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
     print(json.dumps({'report': str(report_path), 'duplicate': duplicate, 'mode': report['mode'], 'members': len(exports), 'rows': report['totals']['rows'], 'review_required': report['totals']['review_required']}, ensure_ascii=False))
 
 

@@ -67,7 +67,7 @@ def source_inputs(args):
         raise FileNotFoundError('v13 기준 자료 폴더를 찾을 수 없습니다. 전체 저장소를 내려받으세요.')
     if args.db:
         p=subprocess.run([sys.executable,str(V13/'refresh_outputs.py'),'--db',str(args.db)],
-                         capture_output=True,text=True,check=True)
+                         capture_output=True,text=True,encoding='utf-8',check=True)
         last=json.loads(p.stdout.strip().splitlines()[-1])
         folder=Path(last['snapshot'])
         base=folder/'외부사업_통합관리_전체자료.xlsx'
