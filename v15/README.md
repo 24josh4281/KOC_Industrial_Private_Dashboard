@@ -11,7 +11,7 @@
 
 ## 매월 갱신
 
-GitHub 저장소의 `v13/incoming/YYYY-MM/` 또는 `v13/incoming/`에 받은 ZIP을 **변경 없이** 업로드하고 커밋합니다. `.github/workflows/refresh-dashboard.yml`이 기존 `monthly_ors.py`를 사용해 해시·양식·기준일·중복을 확인합니다. 통과하면 DB 백업과 원본 보존 후 통계·진행·상세 JSON과 Excel을 만들고 GitHub Pages에 배포합니다. 열린 브라우저는 `manifest.json`을 30초 간격으로 확인하고 새 판본이 나오면 갱신을 안내합니다. Actions 오류나 검증 보류 중에는 이전 공개 화면이 유지됩니다.
+GitHub 저장소 최상위의 `incoming/` 또는 `incoming/YYYY-MM/`에 받은 ZIP을 **변경 없이** 업로드하고 커밋합니다. 기존 `v13/incoming/` 경로도 호환됩니다. `.github/workflows/refresh-dashboard.yml`이 기존 `monthly_ors.py`를 사용해 해시·양식·기준일·중복을 확인합니다. 통과하면 DB 백업과 원본 보존 후 통계·진행·상세 JSON과 Excel을 만들고 GitHub Pages에 배포합니다. 열린 브라우저는 `manifest.json`을 30초 간격으로 확인하고 새 판본이 나오면 갱신을 안내합니다. Actions 오류나 검증 보류 중에는 이전 공개 화면이 유지됩니다.
 
 관리 Tool의 수기 의견·사무국 안내는 ZIP으로 덮어쓰지 않습니다. 이 입력은 v13 `2026 접수·검토·안내` 시트/CSV와 `import_workflow.py` 절차를 통해 별도 DB에 반영해야 합니다. 현재 공개 사이트는 조회용이며 브라우저에서 입력한 내용이 DB에 저장되는 편집 서비스는 아닙니다.
 

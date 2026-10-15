@@ -20,6 +20,11 @@ def run(*args):
     return json.loads(result.stdout.strip().splitlines()[-1])
 
 
+def incoming_sources(root, legacy):
+    return sorted([*root.joinpath('incoming').rglob('*.zip'),
+                   *legacy.joinpath('incoming').rglob('*.zip')])
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--site', required=True, type=Path)
@@ -34,7 +39,7 @@ def main():
     if not db.exists():
         shutil.copy2(V13 / 'external_projects_v13.sqlite3', db)
     accepted = []
-    for source in sorted((V13 / 'incoming').rglob('*.zip')):
+    for source in incoming_sources(ROOT, V13):
         preview = run(V13 / 'monthly_ors.py', source, '--db', db)
         if preview['duplicate']:
             accepted.append({'file': str(source.relative_to(ROOT)), 'result': 'already_registered'})
