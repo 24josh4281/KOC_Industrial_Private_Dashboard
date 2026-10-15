@@ -167,6 +167,7 @@ def restyle_workbook(source: Path, output: Path):
 
 def build(v16: Path, output: Path):
     output.mkdir(parents=True, exist_ok=True)
+    css_version = hashlib.sha256((ROOT / 'brand.css').read_bytes()).hexdigest()[:12]
     for sub in ('data', 'details'):
         shutil.copytree(v16 / sub, output / sub, dirs_exist_ok=True)
     for name in ('statistics.html', 'progress.html', 'case.html', 'work.html',
@@ -179,7 +180,7 @@ def build(v16: Path, output: Path):
                                   '외부사업_담당자_작업현황_v17.csv')
         if name.endswith('.html'):
             content = content.replace('<link rel="stylesheet" href="app.css">',
-                                      '<link rel="stylesheet" href="app.css"><link rel="stylesheet" href="brand.css">')
+                                      f'<link rel="stylesheet" href="app.css"><link rel="stylesheet" href="brand.css?v={css_version}">')
             content = content.replace('자동 갱신 · <span class="asof">',
                                       '<span class="stamp-label">자동 갱신 ·</span><span class="asof">')
         (output / name).write_text(content, encoding='utf-8')

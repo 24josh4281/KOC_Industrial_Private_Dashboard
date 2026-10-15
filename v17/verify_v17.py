@@ -75,7 +75,8 @@ def verify(site: Path):
             raise AssertionError(f'흰 바탕 텍스트 대비 부족: {role}')
     for name in ('statistics.html', 'progress.html', 'work.html', 'case.html'):
         html = (new / name).read_text(encoding='utf-8')
-        if ('href="brand.css"' not in html or
+        css_version = sha(new / 'brand.css')[:12]
+        if (f'href="brand.css?v={css_version}"' not in html or
                 '외부사업_통합관리_v16.xlsx' in html or
                 '외부사업_통합관리_v15.xlsx' in html):
             raise AssertionError(f'웹 스타일 또는 Excel 연결 누락: {name}')
