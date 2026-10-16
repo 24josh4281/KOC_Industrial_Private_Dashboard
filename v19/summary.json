@@ -1,0 +1,230 @@
+{
+  "schema_version": "v19-public-aggregate-1",
+  "as_of": "2026-10-16",
+  "source_date": "2026-10-13",
+  "total": 3419,
+  "current_year": 53,
+  "approved": 2166,
+  "active": 583,
+  "year_missing": 541,
+  "years": [
+    {
+      "label": "2014",
+      "count": 5
+    },
+    {
+      "label": "2015",
+      "count": 64
+    },
+    {
+      "label": "2016",
+      "count": 20
+    },
+    {
+      "label": "2017",
+      "count": 255
+    },
+    {
+      "label": "2018",
+      "count": 164
+    },
+    {
+      "label": "2019",
+      "count": 234
+    },
+    {
+      "label": "2020",
+      "count": 488
+    },
+    {
+      "label": "2021",
+      "count": 527
+    },
+    {
+      "label": "2022",
+      "count": 673
+    },
+    {
+      "label": "2023",
+      "count": 134
+    },
+    {
+      "label": "2024",
+      "count": 84
+    },
+    {
+      "label": "2025",
+      "count": 177
+    },
+    {
+      "label": "2026",
+      "count": 53
+    },
+    {
+      "label": "미기록",
+      "count": 541
+    }
+  ],
+  "stages": [
+    {
+      "label": "접수",
+      "count": 3
+    },
+    {
+      "label": "검토",
+      "count": 31
+    },
+    {
+      "label": "협의",
+      "count": 19
+    },
+    {
+      "label": "보완",
+      "count": 385
+    },
+    {
+      "label": "보류",
+      "count": 86
+    },
+    {
+      "label": "승인",
+      "count": 2166
+    },
+    {
+      "label": "반려",
+      "count": 670
+    },
+    {
+      "label": "철회 요청",
+      "count": 15
+    },
+    {
+      "label": "확인 필요",
+      "count": 44
+    }
+  ],
+  "units": [
+    {
+      "label": "방법론 신청",
+      "count": 99
+    },
+    {
+      "label": "사업 평가",
+      "count": 1584
+    },
+    {
+      "label": "감축량 인증",
+      "count": 1405
+    },
+    {
+      "label": "사업 비공개 신청",
+      "count": 130
+    },
+    {
+      "label": "인증 비공개 신청",
+      "count": 201
+    }
+  ],
+  "regions": [
+    {
+      "label": "국내",
+      "count": 2231
+    },
+    {
+      "label": "국외",
+      "count": 1089
+    },
+    {
+      "label": "공통",
+      "count": 99
+    }
+  ],
+  "months_2026": [
+    {
+      "label": "01",
+      "count": 22
+    },
+    {
+      "label": "02",
+      "count": 2
+    },
+    {
+      "label": "03",
+      "count": 11
+    },
+    {
+      "label": "04",
+      "count": 2
+    },
+    {
+      "label": "05",
+      "count": 3
+    },
+    {
+      "label": "06",
+      "count": 4
+    },
+    {
+      "label": "07",
+      "count": 2
+    },
+    {
+      "label": "08",
+      "count": 6
+    },
+    {
+      "label": "09",
+      "count": 1
+    },
+    {
+      "label": "10",
+      "count": 0
+    },
+    {
+      "label": "11",
+      "count": 0
+    },
+    {
+      "label": "12",
+      "count": 0
+    }
+  ],
+  "stages_2026": [
+    {
+      "label": "접수",
+      "count": 3
+    },
+    {
+      "label": "검토",
+      "count": 13
+    },
+    {
+      "label": "협의",
+      "count": 1
+    },
+    {
+      "label": "보완",
+      "count": 33
+    },
+    {
+      "label": "보류",
+      "count": 2
+    },
+    {
+      "label": "승인",
+      "count": 0
+    },
+    {
+      "label": "반려",
+      "count": 1
+    },
+    {
+      "label": "철회 요청",
+      "count": 0
+    },
+    {
+      "label": "확인 필요",
+      "count": 0
+    }
+  ]
+}
