@@ -9,6 +9,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import zipfile
 from copy import copy
@@ -168,19 +169,25 @@ def restyle_workbook(source: Path, output: Path):
 def build(v16: Path, output: Path):
     output.mkdir(parents=True, exist_ok=True)
     css_version = hashlib.sha256((ROOT / 'brand.css').read_bytes()).hexdigest()[:12]
+    js_source = ROOT / 'app.js' if (ROOT / 'app.js').exists() else v16 / 'app.js'
+    js_version = hashlib.sha256(js_source.read_bytes()).hexdigest()[:12]
     for sub in ('data', 'details'):
         shutil.copytree(v16 / sub, output / sub, dirs_exist_ok=True)
     for name in ('statistics.html', 'progress.html', 'case.html', 'work.html',
                  'app.js', 'app.css'):
-        content = (v16 / name).read_text(encoding='utf-8')
+        source = ROOT / name if name != 'app.css' and (ROOT / name).exists() else v16 / name
+        content = source.read_text(encoding='utf-8')
         content = content.replace('외부사업_통합관리_v15.xlsx', '외부사업_통합관리_v17.xlsx')
         content = content.replace('외부사업_통합관리_v16.xlsx', '외부사업_통합관리_v17.xlsx')
         content = content.replace('외부사업_진행현황_v16.csv', '외부사업_진행현황_v17.csv')
         content = content.replace('외부사업_담당자_작업현황_v16.csv',
                                   '외부사업_담당자_작업현황_v17.csv')
         if name.endswith('.html'):
+            content = re.sub(r'<link rel="stylesheet" href="brand\.css(?:\?v=[^"]*)?">', '', content)
             content = content.replace('<link rel="stylesheet" href="app.css">',
                                       f'<link rel="stylesheet" href="app.css"><link rel="stylesheet" href="brand.css?v={css_version}">')
+            content = re.sub(r'<script src="app\.js(?:\?v=[^"]*)?" defer></script>',
+                             f'<script src="app.js?v={js_version}" defer></script>', content)
             content = content.replace('자동 갱신 · <span class="asof">',
                                       '<span class="stamp-label">자동 갱신 ·</span><span class="asof">')
         (output / name).write_text(content, encoding='utf-8')
