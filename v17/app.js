@@ -26,11 +26,23 @@ function enhanceNav(){
 }
 function bars(pairs,{color='',limit=12}={}) {
   const data=pairs.slice(0,limit),max=Math.max(1,...data.map(item=>Number(item[1]||0)));
-  return data.length ? data.map(([label,value])=>`<div class="barrow"><span class="name" title="${esc(label)}">${esc(label)}</span><span class="track"><i class="fill ${color}" style="width:${Math.max(1,100*Number(value||0)/max)}%"></i></span><b>${fmt(value)}</b></div>`).join('') : '<div class="empty">표시할 자료가 없습니다.</div>';
+  return data.length ? data.map(([label,value])=>`<div class="barrow"><span class="name" title="${esc(label)}">${esc(label)}</span><span class="track"><i class="fill ${color}" data-width="${Number(value)>0?Math.max(1,100*Number(value)/max):0}"></i></span><b>${fmt(value)}</b></div>`).join('') : '<div class="empty">표시할 자료가 없습니다.</div>';
 }
 function monthColumns(left,right=null) {
   const l=left.map(x=>x.count),r=right?right.map(x=>x.count):[],max=Math.max(1,...l,...r);
-  return left.map((x,i)=>`<div class="month" title="${esc(x.month)} · ${fmt(x.count)}${right?` / ${fmt(right[i].count)}`:''}"><div class="columns"><i class="blue" style="height:${Math.max(2,140*x.count/max)}px"></i>${right?`<i style="height:${Math.max(2,140*right[i].count/max)}px"></i>`:''}</div><span>${i+1}월</span></div>`).join('');
+  return left.map((x,i)=>`<div class="month" title="${esc(x.month)} · ${fmt(x.count)}${right?` / ${fmt(right[i].count)}`:''}"><div class="columns"><i class="blue" data-height="${x.count>0?Math.max(2,140*x.count/max):0}"></i>${right?`<i data-height="${right[i].count>0?Math.max(2,140*right[i].count/max):0}"></i>`:''}</div><span>${i+1}월</span></div>`).join('');
+}
+function sizeCharts(){
+  document.querySelectorAll('.fill[data-width]').forEach(node=>{
+    const width=Number(node.dataset.width);
+    node.style.width=`${Number.isFinite(width)?Math.max(0,Math.min(100,width)):0}%`;
+  });
+  document.querySelectorAll('.month i[data-height]').forEach(node=>{
+    const height=Number(node.dataset.height);
+    const safe=Number.isFinite(height)?Math.max(0,Math.min(140,height)):0;
+    node.style.height=`${safe}px`;
+    if(safe===0)node.style.minHeight='0px';
+  });
 }
 function stagePairs(items){return items.map(x=>[x.stage,x.count]);}
 function toast(message,auto=false){const box=$('#update-toast');if(!box)return;box.className='toast visible';box.innerHTML=`${esc(message)} <button type="button">새로고침</button>`;box.querySelector('button').onclick=()=>location.reload();if(auto)setTimeout(()=>location.reload(),8000);}
@@ -192,6 +204,7 @@ async function main(){
     else if(page==='progress')renderProgress(await getJson('data/progress.json'));
     else if(page==='work')renderWork(await getJson('data/work.json'));
     else if(page==='case')await loadCase();
+    sizeCharts();
   }catch(error){const root=page==='case'?'#case-content':'.main';$(root).insertAdjacentHTML('beforeend',`<div class="notice">자료를 불러오지 못했습니다: ${esc(error.message)}</div>`);}
 }
 main();
